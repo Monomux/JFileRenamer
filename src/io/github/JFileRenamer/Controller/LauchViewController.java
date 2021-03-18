@@ -4,7 +4,13 @@ import io.github.JFileRenamer.Entity.TableRank;
 import io.github.JFileRenamer.Repository.RankRepository;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -89,6 +95,17 @@ public class LauchViewController {
                 return cell;
             }
         });
+
+        splitPane.getDividers().get(0).positionProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    double position = splitPane.getDividerPositions()[0];
+                    if(position<0.2){
+                        splitPane.setDividerPosition(0,0.2);
+                    }else if(position>0.5){
+                        splitPane.setDividerPosition(0,0.5);
+                    }
+                }
+        );
     }
 
     @FXML
@@ -99,6 +116,9 @@ public class LauchViewController {
 
     @FXML
     private TableColumn<TableRank, String> fileColumn;
+
+    @FXML
+    private SplitPane splitPane;
 
     @FXML
     private Button replaceButton;
@@ -127,7 +147,6 @@ public class LauchViewController {
     @FXML
     void OnReplaceName(MouseEvent event) {
         String name = inputName.getText();
-        System.out.println(name + "!");
         if(name != null && !name.equals("") && repository.getList().size()>0){
             repository.renameSelectedFile(name,checkExtension.isSelected());
         }
